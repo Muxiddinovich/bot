@@ -1,40 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lokatsiya va Raqam</title>
+  <meta charset="UTF-8">
+  <title>Lokatsiya va Nomer</title>
 </head>
 <body>
-  <h2>Lokatsiyani olish uchun tugmani bosing 👇</h2>
-  <button onclick="getLocation()">📍 Lokatsiyani olish</button><br><br>
-
-  <input type="tel" id="phone" placeholder="📱 Telefon raqamingiz" /><br><br>
-  <button onclick="sendData()">📤 Yuborish</button>
+  <h2>Lokatsiyangiz olinmoqda...</h2>
+  <input type="tel" id="phone" placeholder="Telefon raqamingizni kiriting" />
+  <button onclick="sendData()">Nomerimni yuborish</button>
 
   <script>
-    let latitude = null, longitude = null;
+    let latitude, longitude;
 
-    function getLocation() {
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          latitude = position.coords.latitude;
-          longitude = position.coords.longitude;
-          document.querySelector("h2").innerText = `✅ Lokatsiya olindi:\n📍 ${latitude}, ${longitude}`;
-        },
-        function (error) {
-          document.querySelector("h2").innerText = "❌ Lokatsiyani olishda xatolik: " + error.message;
-        }
-      );
-    }
+    window.onload = function() {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        document.querySelector("h2").innerText = `Lokatsiya olindi ✅\nLongtitude: ${longitude}\nLatitude: ${latitude}`;
+      }, function(error) {
+        document.querySelector("h2").innerText = "Lokatsiyani olishda xatolik ❌";
+      });
+    };
 
     function sendData() {
       const phone = document.getElementById("phone").value;
-
-      if (!latitude || !longitude) {
-        alert("Avval lokatsiyani oling!");
-        return;
-      }
 
       fetch("https://bot-map.onrender.com/send-location", {
         method: "POST",
@@ -47,9 +36,9 @@
           phone_number: phone
         }),
       })
-        .then(res => res.json())
-        .then(data => alert("✅ Yuborildi"))
-        .catch(err => alert("❌ Xatolik: " + err));
+      .then(res => res.json())
+      .then(data => alert("Yuborildi ✅"))
+      .catch(err => alert("Xatolik: " + err));
     }
   </script>
 </body>
