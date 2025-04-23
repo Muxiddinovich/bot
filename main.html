@@ -25,7 +25,7 @@
     function sendData() {
       const phone = document.getElementById("phone").value;
 
-      fetch("http://127.0.0.1:5000/send-location", {
+      fetch("https://bot-map.onrender.com/send-location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
