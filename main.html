@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lokatsiya va Nomer</title>
+</head>
+<body>
+  <h2>Lokatsiyangiz olinmoqda...</h2>
+  <input type="tel" id="phone" placeholder="Telefon raqamingizni kiriting" />
+  <button onclick="sendData()">Nomerimni yuborish</button>
+
+  <script>
+    let latitude, longitude;
+
+    window.onload = function() {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        document.querySelector("h2").innerText = `Lokatsiya olindi ✅\nLongtitude: ${longitude}\nLatitude: ${latitude}`;
+      }, function(error) {
+        document.querySelector("h2").innerText = "Lokatsiyani olishda xatolik ❌";
+      });
+    };
+
+    function sendData() {
+      const phone = document.getElementById("phone").value;
+
+      fetch("http://127.0.0.1:5000/send-location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: latitude,
+          longitude: longitude,
+          phone_number: phone
+        }),
+      })
+      .then(res => res.json())
+      .then(data => alert("Yuborildi ✅"))
+      .catch(err => alert("Xatolik: " + err));
+    }
+  </script>
+</body>
+</html>
